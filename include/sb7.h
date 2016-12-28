@@ -39,7 +39,6 @@
 
 #include "GL/gl3w.h"
 
-#define GLFW_NO_GLU 1
 #define GLFW_INCLUDE_GLCOREARB 1
 
 #include "GLFW/glfw3.h"
