@@ -20,17 +20,13 @@ find_package(OpenGL)
 
 set (CMAKE_DEBUG_POSTFIX "_d")
 
-if(WIN32)
-set(COMMON_LIBS sb7 optimized glfw3 debug glfw3_d ${GLFW_LIBRARIES} ${OPENGL_LIBRARIES})
-elseif (UNIX)
-find_package(PkgConfig REQUIRED)
-pkg_check_modules(GLFW REQUIRED glfw3)
-set(COMMON_LIBS sb7 glfw3 X11 Xrandr Xinerama Xi Xxf86vm Xcursor GL rt dl)
-else()
-set(COMMON_LIBS sb7)
+if (UNIX)
+    set(CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS} -std=c++11)
 endif()
 
-set(COMMON_LIBS ${COMMON_LIBS} ${EXTRA_LIBS})
+add_subdirectory(extern/glfw-3.2.1)
+
+set(COMMON_LIBS sb7 glfw ${GLFW_LIBRARIES} ${OPENGL_LIBRARIES} ${EXTRA_LIBS})
 
 add_library(sb7
             src/sb7/sb7.cpp
@@ -145,12 +141,8 @@ foreach(EXAMPLE ${EXAMPLES})
   endif(MSVC)
 endforeach(EXAMPLE)
 
-IF (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -D_LINUX -std=c++0x")
-ENDIF (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
-
 include_directories( include )
-include_directories(extern/glfw-3.0.4/include)
+include_directories(extern/glfw-3.2.1/include)
 
 ADD_CUSTOM_TARGET(debug ${CMAKE_COMMAND} -DCMAKE_BUILD_TYPE:STRING=Debug ${PROJECT_SOURCE_DIR})
 ADD_CUSTOM_TARGET(release ${CMAKE_COMMAND} -DCMAKE_BUILD_TYPE:STRING=Release ${PROJECT_SOURCE_DIR})
